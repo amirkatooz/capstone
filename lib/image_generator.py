@@ -17,7 +17,8 @@ def rotate_image(image, angle):
     keypoints = image.drop('Image').values - 48
     rotated_keypoints = np.zeros(30)
     
-    for i in range(15):
+    num_of_keypoints = (len(image) - 1) / 2
+    for i in range(num_of_keypoints):
         rotated_keypoints[2*i] = cos*keypoints[2*i] - sin*keypoints[2*i+1]
         rotated_keypoints[2*i+1] = sin*keypoints[2*i] + cos*keypoints[2*i+1]
     
@@ -44,7 +45,8 @@ def rotate_images(image_df, angle):
     keypoints_matrix = image_df.drop('Image', axis=1).values - 48
     rotated_keypoints = np.zeros_like(keypoints_matrix)
 
-    for i in range(15):
+    num_of_keypoints = (image_df.shape[1] - 1) / 2
+    for i in range(num_of_keypoints):
         rotated_keypoints[:, 2*i] = cos*keypoints_matrix[:, 2*i] - sin*keypoints_matrix[:, 2*i+1]
         rotated_keypoints[:, 2*i+1] = sin*keypoints_matrix[:, 2*i] + cos*keypoints_matrix[:, 2*i+1]
     
@@ -64,7 +66,9 @@ def flip_images(image_df):
     )
     
     flipped_image_df = image_df.drop('Image', axis=1)
-    for i in range(15):
+    
+    num_of_keypoints = (image_df.shape[1] - 1) / 2
+    for i in range(num_of_keypoints):
         flipped_image_df.iloc[:, 2*i] = 96 - flipped_image_df.iloc[:, 2*i]
         
     colname_list = [colname.replace('right', 'TEMP') for colname in flipped_image_df.columns.tolist()]
