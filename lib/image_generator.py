@@ -4,32 +4,6 @@ from scipy.misc import imrotate
 
 
 
-def rotate_image(image, angle):
-    
-    rotated_image_str = ' '.join(
-        [str(n) for n in imrotate(np.fromstring(image['Image'], sep=' ').reshape(96, 96), -angle).reshape(96*96,)]
-    )
-    
-    angle_rad = np.radians(angle)
-    cos = np.cos(angle_rad)
-    sin = np.sin(angle_rad)
-    
-    keypoints = image.drop('Image').values - 48
-    rotated_keypoints = np.zeros(30)
-    
-    num_of_keypoints = (len(image) - 1) / 2
-    for i in range(num_of_keypoints):
-        rotated_keypoints[2*i] = cos*keypoints[2*i] - sin*keypoints[2*i+1]
-        rotated_keypoints[2*i+1] = sin*keypoints[2*i] + cos*keypoints[2*i+1]
-    
-    rotated_image_keypoints = image.drop('Image')
-    rotated_image_keypoints.iloc[:] = rotated_keypoints + 48
-    rotated_image_keypoints['Image'] = rotated_image_str
-    
-    return rotated_image_keypoints
-
-
-
 def rotate_images(image_df, angle):
     
     rotated_image_series = image_df['Image'].map(
