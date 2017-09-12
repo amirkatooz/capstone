@@ -6,6 +6,7 @@ from scipy.misc import imrotate
 
 def rotate_images(image_df, angle):
     
+    image_df = image_df.reset_index(drop=True)
     rotated_image_series = image_df['Image'].map(
         lambda image: ' '.join(
             [str(n) for n in imrotate(np.fromstring(image, sep=' ').reshape(96, 96), -angle).reshape(96*96,)]
@@ -33,6 +34,7 @@ def rotate_images(image_df, angle):
 
 def flip_images(image_df):
     
+    image_df = image_df.reset_index(drop=True)
     flipped_image_series = image_df['Image'].map(
         lambda image: ' '.join(
             [str(n) for n in np.fliplr(np.fromstring(image, sep=' ').reshape(96, 96)).reshape(96*96,)]
@@ -59,6 +61,7 @@ def flip_images(image_df):
 
 def adjust_contrast(image_df, degree=.8):
     
+    image_df = image_df.reset_index(drop=True)
     image_list = [np.fromstring(image, sep=' ') for image in image_df['Image']]
     adjusted_contrast_images = pd.Series([degree*image + (1-degree)*image.mean() for image in image_list])
     adjusted_image_str_list = adjusted_contrast_images.map(lambda image: ' '.join([str(round(n)) for n in image]))
